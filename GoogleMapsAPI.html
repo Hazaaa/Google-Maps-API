@@ -3,9 +3,18 @@
   <head>
     <style>
        #map { 
-        height: 600px;
-        width: 100%;
+        height: 400px;
+        width: 60%;
        }
+        
+        table {
+            border: 2px solid black;
+            border-collapse: collapse;
+        }
+        tr,th {
+            border: 1px solid black;
+            padding: 0.5rem;
+        }
     </style>
     <title>Google Maps API</title>
   </head>
@@ -13,13 +22,31 @@
     <h3>My Google Maps Demo</h3>
     <h2 id="pomoc"></h2>
     <div id="map"></div>
+    <div id="tabelaSaEventima">
+        <table id="tabela" hidden="true">
+           <thead id="thead">
+                <tr>
+                    <th>Sport</th>
+                    <th>Vreme</th>
+                    <th>Broj igraca</th>
+                    <th>Broj potrebnih igraca</th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+            </tbody>
+        </table>
+    </div>
     <script>
         //za kreiranje mape za prikaz
       function initMap() {
         //opcije za mapu i za jedan marker
         var options = {
-            zoom: 7.2, //koliko ce zumirano da bude mapa
-            center: {lat: 44.787197, lng: 20.457273} //postavljamo marker na uluru kordinate
+            zoom: 6.7, //koliko ce zumirano da bude mapa
+            center: {lat: 44.287198, lng: 20.657273},//postavljamo marker na uluru kordinate
+            //mapTypeId: google.maps.MapTypeId.ROADMAP
+            maxZoom:13,
+            minZoom:6.7,
+            draggable: false
         }
         
         //Kreiramo mapu koja ce da bude u div-u Map i sa opcijama u options
@@ -85,13 +112,29 @@
                 ime: "Krusevac",
                 koordinate: pozicijaKrusevac,
                 icon: urlZaIcon,
+                eventInfo: [
+                    {
+                        sport: "Fudbal",
+                        vreme: "12:00",
+                        brojIgraca: 5,
+                        brojPotrebnihIgraca: 1
+                    },
+                    {
+                        sport: "Fudbal",
+                        vreme: "13:00",
+                        brojIgraca: 10,
+                        brojPotrebnihIgraca: 1
+                    }
+                ]
             }
         ];
+          //Da bi u svakom trenutku mogao da se prikaze samo jedan infoWindow kada se klikne na neki marker
+          var infoWindow = new google.maps.InfoWindow();
           
           for(var i = 0; i < markeri.length; i++)
             addMarker(markeri[i]);
           
-        //Kreiranje vise markera
+        //Funkcija za kreiranje markera (parametar mark su informacije o markeru koje se postavljaju prilikom kreiranja)
         function addMarker(mark) {
             var marker = new google.maps.Marker( {
                 //draggable: true --ovo moze a ne mora
@@ -101,8 +144,35 @@
                 google.maps.Animation.DROP,
                 icon: mark.icon
             });
+            
+            //Dodavanje kada se klikne na marker da se otvori tabela sa svim eventima
+            marker.addListener('click', function() {
+                var tabela = document.getElementById('tabela');
+                tabela.hidden = false;
+                var tbody = document.getElementById('tbody');
+                tbody.innerHTML = "";
+                mark.eventInfo.forEach(function(element) {
+                    
+                    var noviRed = tbody.insertRow();
+                    
+                    var vrsta1 = noviRed.insertCell(0);
+                    vrsta1.innerHTML = element.sport;
+                    
+                    var vrsta2 = noviRed.insertCell(1);
+                    vrsta2.innerHTML = element.vreme;
+                    
+                    var vrsta3 = noviRed.insertCell(2);
+                    vrsta3.innerHTML = element.brojIgraca;
+                    
+                    var vrsta4 = noviRed.insertCell(3);
+                    vrsta4.innerHTML = element.brojPotrebnihIgraca;
+                });
+                map.setCenter(mark.koordinate);
+                map.setZoom(13);
+            })
+            
             //Kada se klikne na marker da iskoci neki window sa nekim sadrzajem
-            var infoWindow = new google.maps.InfoWindow({
+            /*var infoWindow = new google.maps.InfoWindow({
                 content: mark.ime
             })
             marker.addListener('click', function() {
@@ -111,14 +181,17 @@
         };
         
         //Kada se klikne na mapu da se doda novi pin
-        google.maps.event.addListener(map, 'click', function(event) {
+        /*google.maps.event.addListener(map, 'click', function(event) {
             //Dodajemo marker
             addMarker({
                 ime: "Novi marker",
                 koordinate: event.latLng,
                 icon: urlZaIcon
             }) }
-        )};
+        )*/
+      
+      
+      }; //kraj mapInit funkcije
     </script>
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHDn0g1BXhnxXr0-d12cfzhdHF2j7KgPM&callback=initMap">
