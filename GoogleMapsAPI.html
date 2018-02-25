@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+       #map { 
+        height: 600px;
+        width: 100%;
+       }
+    </style>
+    <title>Google Maps API</title>
+  </head>
+  <body>
+    <h3>My Google Maps Demo</h3>
+    <h2 id="pomoc"></h2>
+    <div id="map"></div>
+    <script>
+        //za kreiranje mape za prikaz
+      function initMap() {
+        //opcije za mapu i za jedan marker
+        var options = {
+            zoom: 7.2, //koliko ce zumirano da bude mapa
+            center: {lat: 44.787197, lng: 20.457273} //postavljamo marker na uluru kordinate
+        }
+        
+        //Kreiramo mapu koja ce da bude u div-u Map i sa opcijama u options
+        var map = new google.maps.Map(document.getElementById('map'), options);
+        
+        /*
+        //Marker predstavlja onaj crveni pin na karti
+        var marker = new google.maps.Marker({
+          position: options.center,
+            draggable: true, // da li moze da se pomera
+            animation: //animacija kad se postavlja
+            google.maps.Animation.DROP,
+            map: map,
+            title: "Hello World",
+            //Dodavanje izgleda markera
+            icon: 'https://cdn4.iconfinder.com/data/icons/soccer-american-football/100/f-11-64.png'
+            
+            
+        });
+        
+        //Kada se klikne na marker da iskoci neki window sa nekim sadrzajem
+        var infoWindow = new google.maps.InfoWindow({
+            content: '<h1>Kontent kad se klikne na marker </h1>'
+        })
+        marker.addListener('click', function() {
+            infoWindow.open(map,marker);
+        })
+          
+        marker.setMap(map);  //prikazuje se tooltip Hello World 
+        
+        //sa ovom metodom vracamo trenutnu poziciju markera
+        let sirina = marker.getPosition().lat();
+        let duzina = marker.getPosition().lng();
+        //let x = document.getElementById("pomoc");
+        //x.innerHTML = duzina;
+        */
+        //Link za icon markera
+        const urlZaIcon = 'https://cdn4.iconfinder.com/data/icons/soccer-american-football/100/f-11-64.png';
+          
+        //koordinate za grad nis
+        var pozicijaNis = {lat: 43.25000, lng: 21.9058393};
+        //koordinate za grad Krusevac
+        var pozicijaKrusevac = {lat: 43.5118437, lng: 21.3378455};
+          
+        
+        //Niz markera
+        var markeri = [
+            {
+                ime: "Beograd",
+                koordinate: {
+                    lat: 44.787197, 
+                    lng: 20.457273 },
+                icon: urlZaIcon,
+            },
+            
+            {
+                ime: "Nis",
+                koordinate: pozicijaNis,
+                icon: urlZaIcon,
+            },
+            
+            {
+                ime: "Krusevac",
+                koordinate: pozicijaKrusevac,
+                icon: urlZaIcon,
+            }
+        ];
+          
+          for(var i = 0; i < markeri.length; i++)
+            addMarker(markeri[i]);
+          
+        //Kreiranje vise markera
+        function addMarker(mark) {
+            var marker = new google.maps.Marker( {
+                //draggable: true --ovo moze a ne mora
+                position: mark.koordinate,
+                map: map,
+                animation: //animacija kad se postavlja
+                google.maps.Animation.DROP,
+                icon: mark.icon
+            });
+            //Kada se klikne na marker da iskoci neki window sa nekim sadrzajem
+            var infoWindow = new google.maps.InfoWindow({
+                content: mark.ime
+            })
+            marker.addListener('click', function() {
+                infoWindow.open(map,marker);
+            });
+        };
+        
+        //Kada se klikne na mapu da se doda novi pin
+        google.maps.event.addListener(map, 'click', function(event) {
+            //Dodajemo marker
+            addMarker({
+                ime: "Novi marker",
+                koordinate: event.latLng,
+                icon: urlZaIcon
+            }) }
+        )};
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHDn0g1BXhnxXr0-d12cfzhdHF2j7KgPM&callback=initMap">
+    </script>
+  </body>
+</html>
