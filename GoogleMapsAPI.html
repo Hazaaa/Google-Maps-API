@@ -46,7 +46,15 @@
             //mapTypeId: google.maps.MapTypeId.ROADMAP
             maxZoom:13,
             minZoom:6.7,
-            draggable: false
+            draggable: false,   //da ne moze mapa da se vuce
+            panControl: false,  
+            zoomControl: true,  //da se prikazu + i - na mapi
+            mapTypeControl: false,  //da li ce satelit ili map prikaz
+            scaleControl: false,
+            streetViewControl: false, //da nema streatview opciju
+            overviewMapControl: true,
+            rotateControl: false //da ne moze da se okrece
+            //disableDefaultUI: true //da se sve iskljuci i da se samo mapa vidi
         }
         
         //Kreiramo mapu koja ce da bude u div-u Map i sa opcijama u options
@@ -167,8 +175,8 @@
                     var vrsta4 = noviRed.insertCell(3);
                     vrsta4.innerHTML = element.brojPotrebnihIgraca;
                 });
-                map.setCenter(mark.koordinate);
                 map.setZoom(13);
+                map.setCenter(marker.getPosition());
             })
             
             //Kada se klikne na marker da iskoci neki window sa nekim sadrzajem
@@ -191,6 +199,7 @@
         )*/
       
       
+        }
       }; //kraj mapInit funkcije
     </script>
     <script async defer
